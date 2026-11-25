@@ -1,5 +1,49 @@
 # app-multiAtlasTT
 
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+> **Maps a chosen cortical atlas (Schaefer, Gordon, Yeo, HCP-MMP, AAL and others) onto a subject's FreeSurfer surfaces with maTT2 GCS classifiers and outputs volumetric and surface parcellations.**
+
+Implements maTT2 from the multi-atlas transfer tools: atlas GCS files trained on Mindboggle-101 are applied with FreeSurfer to the subject's recon-all output, then the labels are remapped to consecutive integers and written as a volume in the subject T1w space, as GIfTI surface labels and as a brain mask. Use it to get an atlas parcellation (with 14 FreeSurfer subcortical regions) for connectivity or ROI analyses. Needs a completed FreeSurfer recon-all directory and a FreeSurfer license.
+
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/freesurfer` |
+| 📤 **Outputs** | `neuro/parcellation/volume` · `neuro/surface/vertices` · `neuro/surface/data` · `neuro/mask` |
+| 🐳 **Container** | `faskowit/app-multiatlastt:0.0.8` |
+| ⚙️ **Resources** | 1 CPUs · 8 GB memory · 2 h walltime |
+| 🔑 **Requires** | `FREESURFER_LICENSE` |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.470](https://doi.org/10.25663/brainlife.app.470) |
+
+#### 📥 Inputs
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `fsin` | `neuro/freesurfer` | yes | Completed FreeSurfer recon-all subject directory. |
+
+#### 📤 Outputs
+
+| Output | Datatype | Description |
+|---|---|---|
+| `parc-vol` | `neuro/parcellation/volume` | Volumetric parcellation (parc.nii.gz) in subject space with key.txt and label.json. |
+| `parc-surf-verts` | `neuro/surface/vertices` | Left and right white, pial and inflated surfaces (GIfTI). |
+| `parc-surf-data` | `neuro/surface/data` | Atlas labels on the left and right surfaces (GIfTI) with key and label files. |
+| `mask` | `neuro/mask` | Brain mask derived from the FreeSurfer aparc+aseg. |
+
+<details>
+<summary><b>⚙️ Parameters</b> (1)</summary>
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `atlas` | enum |  | Atlas to map onto the subject's cortex. Options: `gordon333dil`, `yeo17dil`, `hcp-mmp-b`, `schaefer100-yeo17`, `schaefer200-yeo17`, `schaefer400-yeo17 `, `schaefer500-yeo17`, `schaefer300-yeo17`, `shen268cort`, `baldassano`, `arslan`, `aal`, `nspn500`, `aicha`, `ica`. |
+
+</details>
+
+📚 **References used by this App:**
+- Fischl B, et al. Automatically parcellating the human cerebral cortex. Cereb Cortex 14:11-22 (2004).
+
+<!-- brainlife-app:end -->
+
 0.0.9 branch 
 
 [brainlife.io](https://brainlife.io/) version of multi atlas transfer tools (maTT). This app takes in a completed `recon-all` FreeSurfer directory, and outputs a volumetric parcellation in the indiviual's T1w space. These tools warp the parcellations to the subject space using the warp information provided by FreeSurfer. This is an implemenation of maTT2, which uses the gcs files trained on the [mindboggle-101](https://mindboggle.info/data) data. The GCS files are automatically pulled from the [maTT fishare directory](https://figshare.com/articles/multiAtlasTT_data/5998583/1) if not present locally. 
